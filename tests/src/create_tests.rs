@@ -11,17 +11,17 @@ use ckb_tool::ckb_script::ScriptError;
 use ckb_tool::ckb_types::bytes::BufMut;
 use chrono::*;
 
-pub const MAX_CYCLES: u64 = 10_000_000;
-pub const TIME_INFO_CELL_DATA_N: u8 = 12;
-pub const TIME_INFO_CELL_DATA_LEN: usize = 5;
+const MAX_CYCLES: u64 = 10_000_000;
+const TIME_INFO_CELL_DATA_N: u8 = 12;
+const TIME_INFO_CELL_DATA_LEN: usize = 5;
 
 // error numbers
-pub const ERROR_TIME_INFO_ARGS: i8 = 54;
-pub const ERROR_TIME_INFO_CELL_DATA: i8 = 55;
-pub const ERROR_TIME_INFO_OUTPUT: i8 = 57;
-pub const ERROR_TIME_INFO_INDEX: i8 = 60;
+const ERROR_TIME_INFO_ARGS: i8 = 54;
+const ERROR_TIME_INFO_CELL_DATA: i8 = 55;
+const ERROR_TIME_INFO_OUTPUT: i8 = 57;
+const ERROR_TIME_INFO_INDEX: i8 = 60;
 
-pub fn build_time_info_cell_data(index: u8, timestamp: u32) -> Bytes{
+fn build_time_info_cell_data(index: u8, timestamp: u32) -> Bytes{
     let mut time_buf = BytesMut::with_capacity(TIME_INFO_CELL_DATA_LEN);
     time_buf.put_u8(index);
     time_buf.put_u32( timestamp);

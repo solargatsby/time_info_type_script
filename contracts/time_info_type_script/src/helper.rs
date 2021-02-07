@@ -2,9 +2,7 @@ use alloc::{vec::Vec};
 
 use ckb_std::{ckb_constants::Source, high_level::*};
 use ckb_std::ckb_types::{bytes::Bytes, prelude::*};
-use ckb_std::error::SysError;
 
-use crate::create::*;
 use crate::error::Error;
 
 pub const TIME_INFO_CELL_DATA_LEN : u8 = 5;
@@ -42,14 +40,14 @@ pub fn get_position_of_cell_with_type_script(
 pub fn load_cell_data(script_hash: [u8; 32], source: Source) -> Result<Vec<u8>, Error> {
     let cell_index = match get_position_of_cell_with_type_script(script_hash, source) {
         Some(position) => position,
-        None => match source {
+        None => return match source {
             Source::Input | Source::GroupInput => Err(Error::InvalidTimeInfoInput),
             Source::Output | Source::GroupOutput => Err(Error::InvalidTImeInfoOutput),
             _ => Err(Error::ItemMissing),
         },
     };
     match ckb_std::high_level::load_cell_data(cell_index, source) {
-        Some(cell_data) => cell_data,
+        Ok(cell_data) => Ok(cell_data),
         Err(sys_err) => Err(Error::from(sys_err)),
     }
 }
@@ -77,12 +75,12 @@ pub fn update_cell_args_check(script_hash: [u8; 32]) -> Result<(),Error>{
 
     let cell_index = match get_position_of_cell_with_type_script(script_hash, Source::Input){
         Some(position) => position,
-        None => Err(Error::InvalidTimeInfoInput),
+        None => return Err(Error::InvalidTimeInfoInput),
     };
     let input_cell_data = load_cell(cell_index, Source::Input)?;
     let input_script = match input_cell_data.type_().to_opt() {
         Some(type_script) => type_script,
-        None => Err(Error::InvalidTimeInfoInput),
+        None => return Err(Error::InvalidTimeInfoInput),
     };
     let input_script_args: Bytes = input_script.args().unpack();
 

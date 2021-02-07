@@ -1,9 +1,15 @@
-use crate::error::Error;
-use crate::create::*;
 use alloc::{vec::Vec};
+
+use ckb_std::{ckb_constants::Source, high_level::*};
 use ckb_std::ckb_types::{bytes::Bytes, prelude::*};
-use ckb_std::{high_level::*, ckb_constants::Source};
 use ckb_std::error::SysError;
+
+use crate::create::*;
+use crate::error::Error;
+
+pub const TIME_INFO_CELL_DATA_LEN : u8 = 5;
+pub const TIME_INFO_CELL_DATA_N: u8 = 12;
+pub const TIME_INFO_UPDATE_INTERVAL: u32 = 60; //s
 
 pub fn cell_data_check(cell_data: &Vec<u8>)->Result<(), Error>{
     if cell_data.len() != TIME_INFO_CELL_DATA_LEN as usize{
@@ -23,11 +29,29 @@ pub fn get_script_hash_cell_count(script_hash: [u8; 32], source: Source) -> usiz
         count()
 }
 
-pub fn load_cell_data(script_hash:[u8; 32], source: Source) -> Result<Vec<u8>, SysError>{
-    let cell_index = QueryIter::new(load_cell_type_hash, source).
-        position(|type_script|type_script.unwrap() == script_hash).unwrap();
+pub fn get_position_of_cell_with_type_script(
+    script_hash: [u8; 32],
+    source: Source,
+) -> Option<usize> {
+    QueryIter::new(load_cell_type_hash, source).position(|type_script_op| match type_script_op {
+        Some(type_script) => type_script == script_hash,
+        None => false,
+    })
+}
 
-    ckb_std::high_level::load_cell_data(cell_index, source)
+pub fn load_cell_data(script_hash: [u8; 32], source: Source) -> Result<Vec<u8>, Error> {
+    let cell_index = match get_position_of_cell_with_type_script(script_hash, source) {
+        Some(position) => position,
+        None => match source {
+            Source::Input | Source::GroupInput => Err(Error::InvalidTimeInfoInput),
+            Source::Output | Source::GroupOutput => Err(Error::InvalidTImeInfoOutput),
+            _ => Err(Error::ItemMissing),
+        },
+    };
+    match ckb_std::high_level::load_cell_data(cell_index, source) {
+        Some(cell_data) => cell_data,
+        Err(sys_err) => Err(Error::from(sys_err)),
+    }
 }
 
 pub fn get_timestamp_from_data(cell_data: &Vec<u8>) -> u32{
@@ -51,10 +75,15 @@ pub fn update_cell_args_check(script_hash: [u8; 32]) -> Result<(),Error>{
         return Err(Error::InvalidArgument)
     }
 
-    let cell_index = QueryIter::new(load_cell_type_hash, Source::Input).
-        position(|type_script|type_script.unwrap() == script_hash).unwrap();
+    let cell_index = match get_position_of_cell_with_type_script(script_hash, Source::Input){
+        Some(position) => position,
+        None => Err(Error::InvalidTimeInfoInput),
+    };
     let input_cell_data = load_cell(cell_index, Source::Input)?;
-    let input_script = input_cell_data.type_().to_opt().unwrap();
+    let input_script = match input_cell_data.type_().to_opt() {
+        Some(type_script) => type_script,
+        None => Err(Error::InvalidTimeInfoInput),
+    };
     let input_script_args: Bytes = input_script.args().unpack();
 
     if input_script_args[..] != script_args[..] {

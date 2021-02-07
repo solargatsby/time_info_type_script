@@ -1,15 +1,16 @@
-use super::*;
+use chrono::*;
+use ckb_testtool::{builtin::ALWAYS_SUCCESS, context::Context};
+use ckb_tool::ckb_error::assert_error_eq;
+use ckb_tool::ckb_script::ScriptError;
 use ckb_tool::ckb_types::{
     bytes::{Bytes, BytesMut},
-    core::{TransactionBuilder},
+    core::TransactionBuilder,
     packed::*,
     prelude::*,
 };
-use ckb_testtool::{builtin::ALWAYS_SUCCESS, context::Context};
-use ckb_tool::ckb_error::assert_error_eq;
 use ckb_tool::ckb_types::bytes::BufMut;
-use ckb_tool::ckb_script::ScriptError;
-use chrono::*;
+
+use super::*;
 
 const ERROR_TIME_INFO_ARGS: i8 = 54;
 const ERROR_TIME_INFO_CELL_DATA: i8 = 55;

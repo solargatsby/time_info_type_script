@@ -1,10 +1,7 @@
 use ckb_std::{ckb_constants::Source};
+
 use crate::error::*;
 use crate::helper::*;
-
-pub const TIME_INFO_CELL_DATA_LEN : u8 = 5;
-pub const TIME_INFO_CELL_DATA_N: u8 = 12;
-pub const TIME_INFO_UPDATE_INTERVAL: u32 = 60; //s
 
 pub fn create(script_hash: [u8; 32]) -> Result<(), Error>{
     output_cell_check(script_hash)?;

@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/solargatsby/time_info_type_script/blob/main/COPYING)
 [![Github Actions CI](https://github.com/solargatsby/time_info_type_script/workflows/CI/badge.svg)](https://github.com/solargatsby/time_info_type_script/actions)
 
-The type script of timestamp index cell on Nervos CKB using [Capsule](https://github.com/nervosnetwork/capsule).
+The type script of timestamp info cell on Nervos CKB using [Capsule](https://github.com/nervosnetwork/capsule).
 
 In order to resolve the problem how get current timestamp in script, we design two timestamp scripts.
 They are time_info_type_script and [time_index_state_type_script](https://github.com/solargatsby/time_index_state_type_script).

@@ -2,6 +2,7 @@ use std::env;
 use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
+
 use ckb_tool::ckb_types::bytes::Bytes;
 
 #[cfg(test)]

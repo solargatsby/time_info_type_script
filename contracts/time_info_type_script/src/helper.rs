@@ -77,7 +77,7 @@ pub fn cell_args_check(script_hash: [u8; 32]) -> Result<(),Error>{
 
 pub fn timestamp_check(last_timestamp: u32, current_timestamp: u32) -> Result<(), Error>{
     let time_cost_of_a_round = TIME_INFO_CELL_DATA_N as u32 * TIME_INFO_UPDATE_INTERVAL;
-    if current_timestamp <= last_timestamp + time_cost_of_a_round || current_timestamp > last_timestamp + time_cost_of_a_round * 2{
+    if current_timestamp <= last_timestamp + time_cost_of_a_round {
         return Err(Error::InvalidTimestamp)
     }
     Ok(())

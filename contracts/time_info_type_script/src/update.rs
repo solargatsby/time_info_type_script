@@ -1,7 +1,14 @@
 use ckb_std::{ckb_constants::Source};
 
 use crate::error::*;
-use crate::helper::*;
+use crate::helper::{
+    cell_args_check,
+    get_script_hash_cell_count,
+    get_timestamp_from_cell_data,
+    input_cell_since_check,
+    TIME_INFO_CELL_DATA_LEN,
+    timestamp_check,
+};
 
 pub fn update(script_hash: [u8; 32]) -> Result<(), Error>{
     //should only one time info cell in inout

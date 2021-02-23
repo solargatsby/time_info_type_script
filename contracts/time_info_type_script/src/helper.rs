@@ -77,7 +77,7 @@ pub fn cell_args_check(script_hash: [u8; 32]) -> Result<(),Error>{
 
 pub fn timestamp_check(last_timestamp: u32, current_timestamp: u32) -> Result<(), Error>{
     let time_cost_of_a_round = TIME_INFO_CELL_DATA_N as u32 * TIME_INFO_UPDATE_INTERVAL;
-    if current_timestamp <= last_timestamp + time_cost_of_a_round {
+    if current_timestamp < last_timestamp + time_cost_of_a_round {
         return Err(Error::InvalidTimestamp)
     }
     Ok(())
@@ -87,7 +87,7 @@ pub fn input_cell_since_check(last_timestamp: u32) -> Result<(), Error>{
     let time_cost_of_a_round = TIME_INFO_CELL_DATA_N as u32 * TIME_INFO_UPDATE_INTERVAL;
     let since_base: u64 = 1 << 62;
     if QueryIter::new(load_input_since, Source::GroupInput).
-        any(|since| since != since_base  + (last_timestamp + time_cost_of_a_round + TIME_INFO_UPDATE_INTERVAL) as u64){
+        any(|since| since != since_base  + (last_timestamp + time_cost_of_a_round) as u64){
         return Err(Error::InvalidTimeSince)
     }
     Ok(())

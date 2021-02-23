@@ -11,8 +11,8 @@ pub fn create(script_hash: [u8; 32]) -> Result<(), Error> {
     }
 
     let script = load_script()?;
-    //scrip args cannot empty
-    if script.args().is_empty() {
+    //scrip args cannot empty (txHash + index)
+    if script.args().len() != 36 {
         return Err(Error::InvalidArgument);
     }
 

@@ -15,7 +15,6 @@ use ckb_std::default_alloc;
 // define modules
 mod entry;
 mod error;
-mod hash;
 mod create;
 mod helper;
 mod update;

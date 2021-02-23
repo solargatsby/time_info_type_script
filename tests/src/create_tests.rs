@@ -22,10 +22,10 @@ const ERROR_TIME_INFO_CELL_DATA: i8 = 55;
 const ERROR_TIME_INFO_OUTPUT: i8 = 57;
 const ERROR_TIME_INFO_INDEX: i8 = 60;
 
-fn build_time_info_cell_data(index: u8, timestamp: u32) -> Bytes{
+fn build_time_info_cell_data(index: u8, timestamp: u32) -> Bytes {
     let mut time_buf = BytesMut::with_capacity(TIME_INFO_CELL_DATA_LEN);
     time_buf.put_u8(index);
-    time_buf.put_u32( timestamp);
+    time_buf.put_u32(timestamp);
     Bytes::from(time_buf.to_vec())
 }
 
@@ -164,7 +164,7 @@ fn test_error_with_invalid_output() {
 }
 
 #[test]
-fn test_error_with_invalid_cell_data(){
+fn test_error_with_invalid_cell_data() {
 // deploy contract
     let mut context = Context::default();
     // deploy always_success script
@@ -227,7 +227,7 @@ fn test_error_with_invalid_cell_data(){
 }
 
 #[test]
-fn test_error_with_invalid_time_index(){
+fn test_error_with_invalid_time_index() {
     // deploy contract
     let mut context = Context::default();
     // deploy always_success script
@@ -293,7 +293,7 @@ fn test_error_with_invalid_time_index(){
 }
 
 #[test]
-fn test_error_with_invalid_args(){
+fn test_error_with_invalid_args() {
     let mut context = Context::default();
     // deploy always_success script
     let always_success_out_point = context.deploy_cell(ALWAYS_SUCCESS.clone());

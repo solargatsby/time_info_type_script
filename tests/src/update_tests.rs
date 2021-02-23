@@ -23,18 +23,19 @@ const ERROR_TIME_INFO_TIME_INDEX: i8 = 60;
 const MAX_CYCLES: u64 = 10_000_000;
 const TIME_INFO_CELL_DATA_N: u8 = 12;
 const TIME_INFO_CELL_DATA_LEN: usize = 5;
-const TIME_INFO_UPDATE_INTERVAL: u32 = 60; //s
+const TIME_INFO_UPDATE_INTERVAL: u32 = 60;
+//s
 const TIME_COST_A_ROUND: u32 = TIME_INFO_CELL_DATA_N as u32 * TIME_INFO_UPDATE_INTERVAL;
 
-fn build_time_info_cell_data(index: u8, timestamp: u32) -> Bytes{
+fn build_time_info_cell_data(index: u8, timestamp: u32) -> Bytes {
     let mut time_buf = BytesMut::with_capacity(TIME_INFO_CELL_DATA_LEN);
     time_buf.put_u8(index);
-    time_buf.put_u32( timestamp);
+    time_buf.put_u32(timestamp);
     Bytes::from(time_buf.to_vec())
 }
 
 #[test]
-fn test_success_update(){
+fn test_success_update() {
     // deploy contract
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary("time_info_type_script");
@@ -101,7 +102,7 @@ fn test_success_update(){
 }
 
 #[test]
-fn test_error_invalid_input(){
+fn test_error_invalid_input() {
     // deploy contract
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary("time_info_type_script");
@@ -175,7 +176,7 @@ fn test_error_invalid_input(){
 }
 
 #[test]
-fn test_error_invalid_output(){
+fn test_error_invalid_output() {
     // deploy contract
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary("time_info_type_script");
@@ -252,7 +253,7 @@ fn test_error_invalid_output(){
 }
 
 #[test]
-fn test_error_invalid_cell_data(){
+fn test_error_invalid_cell_data() {
     // deploy contract
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary("time_info_type_script");
@@ -322,7 +323,7 @@ fn test_error_invalid_cell_data(){
 }
 
 #[test]
-fn test_error_invalid_since(){
+fn test_error_invalid_since() {
     // deploy contract
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary("time_info_type_script");
@@ -388,7 +389,7 @@ fn test_error_invalid_since(){
 }
 
 #[test]
-fn test_error_invalid_timestamp(){
+fn test_error_invalid_timestamp() {
     // deploy contract
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary("time_info_type_script");
@@ -456,7 +457,7 @@ fn test_error_invalid_timestamp(){
 }
 
 #[test]
-fn test_error_invalid_time_index(){
+fn test_error_invalid_time_index() {
     // deploy contract
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary("time_info_type_script");
@@ -488,7 +489,7 @@ fn test_error_invalid_time_index(){
             .lock(lock_script.clone())
             .type_(Some(type_script.clone()).pack())
             .build(),
-        build_time_info_cell_data(time_index+1, now - TIME_COST_A_ROUND),
+        build_time_info_cell_data(time_index + 1, now - TIME_COST_A_ROUND),
     );
 
     let since: u64 = 1 << 62;
@@ -524,7 +525,7 @@ fn test_error_invalid_time_index(){
 }
 
 #[test]
-fn test_error_empty_args(){
+fn test_error_empty_args() {
     // deploy contract
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary("time_info_type_script");

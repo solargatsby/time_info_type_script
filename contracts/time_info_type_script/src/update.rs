@@ -10,25 +10,25 @@ use crate::helper::{
     timestamp_check,
 };
 
-pub fn update(script_hash: [u8; 32]) -> Result<(), Error>{
+pub fn update(script_hash: [u8; 32]) -> Result<(), Error> {
     //should only one time info cell in inout
-    if get_script_hash_cell_count(script_hash, Source::Input) != 1{
+    if get_script_hash_cell_count(script_hash, Source::Input) != 1 {
         return Err(Error::InvalidTimeInfoInput);
     }
     //should only one time info cell in output
-    if get_script_hash_cell_count(script_hash, Source::Output) != 1{
-        return Err(Error::InvalidTImeInfoOutput)
+    if get_script_hash_cell_count(script_hash, Source::Output) != 1 {
+        return Err(Error::InvalidTImeInfoOutput);
     }
     //check whether args of script of input not empty and equal args of output's
     cell_args_check(script_hash)?;
 
     let input_cell_data = crate::helper::load_cell_data(script_hash, Source::Input)?;
-    if input_cell_data.len() != TIME_INFO_CELL_DATA_LEN as usize{
-        return Err(Error::InvalidCellData)
+    if input_cell_data.len() != TIME_INFO_CELL_DATA_LEN as usize {
+        return Err(Error::InvalidCellData);
     }
     let output_cell_data = crate::helper::load_cell_data(script_hash, Source::Output)?;
-    if output_cell_data.len() != TIME_INFO_CELL_DATA_LEN as usize{
-        return Err(Error::InvalidCellData)
+    if output_cell_data.len() != TIME_INFO_CELL_DATA_LEN as usize {
+        return Err(Error::InvalidCellData);
     }
 
     let last_timestamp = get_timestamp_from_cell_data(&input_cell_data);
@@ -40,7 +40,7 @@ pub fn update(script_hash: [u8; 32]) -> Result<(), Error>{
 
     //time index in output cell should equal time index in input cell
     if output_cell_data[0] != input_cell_data[0] {
-        return Err(Error::InvalidTimeIndex)
+        return Err(Error::InvalidTimeIndex);
     }
     Ok(())
 }

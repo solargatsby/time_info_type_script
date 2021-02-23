@@ -21,11 +21,8 @@ const ERROR_TIME_INFO_TIMESTAMP: i8 = 59;
 const ERROR_TIME_INFO_TIME_INDEX: i8 = 60;
 
 const MAX_CYCLES: u64 = 10_000_000;
-const TIME_INFO_CELL_DATA_N: u8 = 12;
 const TIME_INFO_CELL_DATA_LEN: usize = 5;
 const TIME_INFO_UPDATE_INTERVAL: u32 = 60;
-//s
-const TIME_COST_A_ROUND: u32 = TIME_INFO_CELL_DATA_N as u32 * TIME_INFO_UPDATE_INTERVAL;
 
 fn build_time_info_cell_data(index: u8, timestamp: u32) -> Bytes {
     let mut time_buf = BytesMut::with_capacity(TIME_INFO_CELL_DATA_LEN);
@@ -67,7 +64,7 @@ fn test_success_update() {
             .lock(lock_script.clone())
             .type_(Some(type_script.clone()).pack())
             .build(),
-        build_time_info_cell_data(time_index, now - TIME_COST_A_ROUND),
+        build_time_info_cell_data(time_index, now - TIME_INFO_UPDATE_INTERVAL),
     );
 
     let since: u64 = 1 << 62;
@@ -134,7 +131,7 @@ fn test_error_invalid_input() {
             .lock(lock_script.clone())
             .type_(Some(type_script.clone()).pack())
             .build(),
-        build_time_info_cell_data(time_index, now - TIME_COST_A_ROUND),
+        build_time_info_cell_data(time_index, now - TIME_INFO_UPDATE_INTERVAL),
     );
 
     let since: u64 = 1 << 62;
@@ -208,7 +205,7 @@ fn test_error_invalid_output() {
             .lock(lock_script.clone())
             .type_(Some(type_script.clone()).pack())
             .build(),
-        build_time_info_cell_data(time_index, now - TIME_COST_A_ROUND),
+        build_time_info_cell_data(time_index, now - TIME_INFO_UPDATE_INTERVAL),
     );
 
     let since: u64 = 1 << 62;
@@ -285,7 +282,7 @@ fn test_error_invalid_cell_data() {
             .lock(lock_script.clone())
             .type_(Some(type_script.clone()).pack())
             .build(),
-        build_time_info_cell_data(time_index, now - TIME_COST_A_ROUND),
+        build_time_info_cell_data(time_index, now - TIME_INFO_UPDATE_INTERVAL),
     );
 
     let since: u64 = 1 << 62;
@@ -355,7 +352,7 @@ fn test_error_invalid_since() {
             .lock(lock_script.clone())
             .type_(Some(type_script.clone()).pack())
             .build(),
-        build_time_info_cell_data(time_index, now - TIME_COST_A_ROUND),
+        build_time_info_cell_data(time_index, now - TIME_INFO_UPDATE_INTERVAL),
     );
 
     let input = CellInput::new_builder()
@@ -421,7 +418,7 @@ fn test_error_invalid_timestamp() {
             .lock(lock_script.clone())
             .type_(Some(type_script.clone()).pack())
             .build(),
-        build_time_info_cell_data(time_index, now - TIME_COST_A_ROUND),
+        build_time_info_cell_data(time_index, now + TIME_INFO_UPDATE_INTERVAL),
     );
 
     let since: u64 = 1 << 62;
@@ -437,7 +434,7 @@ fn test_error_invalid_timestamp() {
             .build(),
     ];
 
-    let outputs_data = vec![build_time_info_cell_data(time_index, now - TIME_INFO_UPDATE_INTERVAL)];
+    let outputs_data = vec![build_time_info_cell_data(time_index, now)];
     // build transaction
     let tx = TransactionBuilder::default()
         .input(input)
@@ -489,7 +486,7 @@ fn test_error_invalid_time_index() {
             .lock(lock_script.clone())
             .type_(Some(type_script.clone()).pack())
             .build(),
-        build_time_info_cell_data(time_index + 1, now - TIME_COST_A_ROUND),
+        build_time_info_cell_data(time_index + 1, now - TIME_INFO_UPDATE_INTERVAL),
     );
 
     let since: u64 = 1 << 62;
@@ -559,7 +556,7 @@ fn test_error_empty_args() {
             .lock(lock_script.clone())
             .type_(Some(type_script.clone()).pack())
             .build(),
-        build_time_info_cell_data(time_index, now - TIME_COST_A_ROUND),
+        build_time_info_cell_data(time_index, now - TIME_INFO_UPDATE_INTERVAL),
     );
 
     let since: u64 = 1 << 62;

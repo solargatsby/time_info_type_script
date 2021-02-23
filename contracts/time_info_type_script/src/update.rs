@@ -36,7 +36,7 @@ pub fn update(script_hash: [u8; 32]) -> Result<(), Error> {
     timestamp_check(last_timestamp, current_timestamp)?;
 
     //check since of input cell in case time info update to early
-    input_cell_since_check(last_timestamp)?;
+    input_cell_since_check(current_timestamp)?;
 
     //time index in output cell should equal time index in input cell
     if output_cell_data[0] != input_cell_data[0] {
